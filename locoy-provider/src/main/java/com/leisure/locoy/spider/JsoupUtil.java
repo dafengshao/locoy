@@ -1,7 +1,6 @@
-package com.leisure.locoy.spider.util;
+package com.leisure.locoy.spider;
 
 import java.io.IOException;
-import java.net.URL;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;

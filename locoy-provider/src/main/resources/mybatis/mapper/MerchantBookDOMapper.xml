@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leisure.locoy.provider.dao.MerchantBookDOMapper">
+
+
+	<!-- 通用查询结果列-->
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[
+			id,
+			book_name AS bookName,
+			book_category AS bookCategory,
+			operate_category,
+			author,
+			describe,
+			bstatus,
+			last_update_time AS lastUpdateTime,
+			last_chapter AS lastChapter,
+			site_url AS siteUrl,
+			cover,
+			create_time,
+			cover_url AS coverUrl
+		]]>
+	</sql>
+
+	<!-- 查询列来源表 -->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM init_merchant_book]]></sql>
+
+
+
+	<!--全部条件(更多功能可以通过queryData扩展实现) -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+			<if test="id!=null "><![CDATA[AND id= #{id}]]></if>
+			<if test="bookName!=null "><![CDATA[AND book_name= #{bookName}]]></if>
+			<if test="operateCategory!=null "><![CDATA[AND operate_category= #{operateCategory}]]></if>
+			<if test="bookCategory!=null "><![CDATA[AND book_category= #{bookCategory}]]></if>
+			<if test="author!=null "><![CDATA[AND author= #{author}]]></if>
+			<if test="describe!=null "><![CDATA[AND describe= #{describe}]]></if>
+			<if test="bstatus!=null "><![CDATA[AND bstatus= #{bstatus}]]></if>
+			<if test="lastUpdateTime!=null "><![CDATA[AND last_update_time= #{lastUpdateTime}]]></if>
+			<if test="lastChapter!=null "><![CDATA[AND last_chapter= #{lastChapter}]]></if>
+			<if test="siteUrl!=null "><![CDATA[AND site_url= #{siteUrl}]]></if>
+		</where>
+	</sql>
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderBy != null">
+			<![CDATA[ORDER BY ${orderBy}]]>
+		</if>
+		<if test="limitIndex != null and limitSize != null and limitIndex >= 0 and limitSize>0"><![CDATA[LIMIT #{limitIndex},#{limitSize}]]></if>
+	</sql>
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->	<!-- 修 改-->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+			<if test="bookName!=null"><![CDATA[book_name = #{bookName},]]></if>
+			<if test="bookCategory!=null"><![CDATA[book_category = #{bookCategory},]]></if>
+			<if test="author!=null"><![CDATA[author = #{author},]]></if>
+			<if test="describe!=null"><![CDATA[describe = #{describe},]]></if>
+			<if test="bstatus!=null"><![CDATA[bstatus = #{bstatus},]]></if>
+			<if test="lastUpdateTime!=null"><![CDATA[last_update_time = #{lastUpdateTime},]]></if>
+			<if test="lastChapter!=null"><![CDATA[last_chapter = #{lastChapter},]]></if>
+			<if test="siteUrl!=null"><![CDATA[site_url = #{siteUrl},]]></if>
+			<if test="cover!=null"><![CDATA[cover = #{cover},]]></if>
+			<if test="coverUrl!=null"><![CDATA[cover_url = #{coverUrl},]]></if>
+			<if test="createTime!=null"><![CDATA[create_time = #{createTime},]]></if>
+		</set>
+	</sql>
+	<insert id="insertSelectiveBatch" >
+		  <foreach collection="list" item="book" index="index" separator=";">
+		    INSERT INTO init_merchant_book
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="book.uuid!=null">uuid,</if>
+				<if test="book.bookName!=null">book_name,</if>
+				<if test="book.bookCategory!=null">book_category,</if>
+				<if test="book.operateCategory!=null">operate_category,</if>
+				<if test="book.author!=null">author,</if>
+				<if test="book.describe!=null">describe,</if>
+				<if test="book.bstatus!=null">bstatus,</if>
+				<if test="book.lastUpdateTime!=null">last_update_time,</if>
+				<if test="book.lastChapter!=null">last_chapter,</if>
+				<if test="book.siteUrl!=null">site_url,</if>
+				<if test="book.cover!=null">cover,</if>
+				<if test="book.coverUrl!=null">cover_url,</if>
+				<if test="book.createTime!=null"><![CDATA[create_time,]]></if>
+			</trim>
+			<trim prefix="values (" suffix=")" suffixOverrides=",">
+				<if test="book.uuid!=null">#{book.uuid},</if>
+				<if test="book.bookName!=null">#{book.bookName},</if>
+				<if test="book.bookCategory!=null">#{book.bookCategory},</if>
+				<if test="book.operateCategory!=null">#{book.operateCategory},</if>
+				<if test="book.author!=null">#{book.author},</if>
+				<if test="book.describe!=null">#{book.describe},</if>
+				<if test="book.bstatus!=null">#{book.bstatus},</if>
+				<if test="book.lastUpdateTime!=null">#{book.lastUpdateTime},</if>
+				<if test="book.lastChapter!=null">#{book.lastChapter},</if>
+				<if test="book.siteUrl!=null">#{book.siteUrl},</if>
+				<if test="book.cover!=null">#{book.cover},</if>
+				<if test="book.coverUrl!=null">#{book.coverUrl},</if>
+				<if test="book.createTime!=null"><![CDATA[#{book.createTime},]]></if>
+			</trim>
+			ON DUPLICATE KEY UPDATE
+			<trim prefix="" suffix="" suffixOverrides=",">
+				<if test="book.uuid!=null">uuid=#{book.uuid},</if>
+				<if test="book.bookCategory!=null">book_category=#{book.bookCategory},</if>
+				<if test="book.operateCategory!=null">operate_category=#{book.operateCategory},</if>
+				<if test="book.author!=null">author=#{book.author},</if>
+				<if test="book.describe!=null">describe=#{book.describe},</if>
+				<if test="book.bstatus!=null">bstatus=#{book.bstatus},</if>
+				<if test="book.lastUpdateTime!=null">last_update_time=#{book.lastUpdateTime},</if>
+				<if test="book.lastChapter!=null">last_chapter=#{book.lastChapter},</if>
+				<if test="book.siteUrl!=null">site_url=#{book.siteUrl},</if>
+				<if test="book.cover!=null">cover=#{book.cover},</if>
+				<if test="book.coverUrl!=null">cover_url=#{book.coverUrl},</if>
+				<if test="book.createTime!=null"><![CDATA[create_time=#{book.createTime},]]></if>
+			</trim>
+		  </foreach>
+	</insert>
+	
+	<!-- 插入记录 -->
+	<insert id="insertSelective" parameterType="merchantBookDO" useGeneratedKeys="true" keyProperty="id">
+			INSERT INTO init_merchant_book
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="uuid!=null">uuid,</if>
+				<if test="bookName!=null">book_name,</if>
+				<if test="bookCategory!=null">book_category,</if>
+				<if test="operateCategory!=null">operate_category,</if>
+				<if test="author!=null">author,</if>
+				<if test="describe!=null">describe,</if>
+				<if test="bstatus!=null">bstatus,</if>
+				<if test="lastUpdateTime!=null">last_update_time,</if>
+				<if test="lastChapter!=null">last_chapter,</if>
+				<if test="siteUrl!=null">site_url,</if>
+				<if test="cover!=null">cover,</if>
+				<if test="coverUrl!=null">cover_url,</if>
+				<if test="createTime!=null"><![CDATA[create_time,]]></if>
+			</trim>
+			<trim prefix="values (" suffix=")" suffixOverrides=",">
+				<if test="uuid!=null">#{uuid},</if>
+				<if test="bookName!=null">#{bookName},</if>
+				<if test="bookCategory!=null">#{bookCategory},</if>
+				<if test="operateCategory!=null">#{operateCategory},</if>
+				<if test="author!=null">#{author},</if>
+				<if test="describe!=null">#{describe},</if>
+				<if test="bstatus!=null">#{bstatus},</if>
+				<if test="lastUpdateTime!=null">#{lastUpdateTime},</if>
+				<if test="lastChapter!=null">#{lastChapter},</if>
+				<if test="siteUrl!=null">#{siteUrl},</if>
+				<if test="cover!=null">#{cover},</if>
+				<if test="coverUrl!=null">#{coverUrl},</if>
+				<if test="createTime!=null"><![CDATA[#{createTime},]]></if>
+			</trim>
+			ON DUPLICATE KEY UPDATE
+			<trim prefix="" suffix="" suffixOverrides=",">
+				<if test="uuid!=null">uuid=#{uuid},</if>
+				<if test="bookName!=null">book_name=#{bookName},</if>
+				<if test="bookCategory!=null">book_category=#{bookCategory},</if>
+				<if test="operateCategory!=null">operate_category=#{operateCategory},</if>
+				<if test="author!=null">author=#{author},</if>
+				<if test="describe!=null">describe=#{describe},</if>
+				<if test="bstatus!=null">bstatus=#{bstatus},</if>
+				<if test="lastUpdateTime!=null">last_update_time=#{lastUpdateTime},</if>
+				<if test="lastChapter!=null">last_chapter=#{lastChapter},</if>
+				<if test="siteUrl!=null">site_url=#{siteUrl},</if>
+				<if test="cover!=null">cover=#{cover},</if>
+				<if test="coverUrl!=null">cover_url=#{coverUrl},</if>
+				<if test="createTime!=null"><![CDATA[create_time=#{createTime},]]></if>
+			</trim>
+			
+	</insert>
+
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 删除记录,主键IN(array)  -->
+	<delete id="deleteByArrayKey" parameterType="java.lang.reflect.Array">
+		 <![CDATA[DELETE FROM init_merchant_book  WHERE id IN]]>
+		 <foreach collection="array" item="id" open="(" separator="," close=")">
+			 <![CDATA[#{id}]]>
+		</foreach>
+	</delete>
+
+	<!--删除,通过条件-->
+	<delete id="deleteByCondtion" parameterType="merchantBookDO">
+		<![CDATA[DELETE FROM init_merchant_book]]>
+			<include refid="QUERY_WHERE_CLAUSE"/>
+	</delete>
+
+	<!--删除,通过主键-->
+	<delete id="deleteByPrimaryKey" parameterType="merchantBookDO">
+		 <![CDATA[DELETE FROM init_merchant_book  WHERE id = #{id}]]>
+	</delete>
+
+	<!--修改记录通过主键-->
+	<update id="updateByPrimaryKeySelective" parameterType="merchantBookDO">
+		<![CDATA[UPDATE init_merchant_book]]>
+			<include refid="UPDATE_COLUMN_SET"/>
+			<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键==(key) -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long" resultType="merchantBookDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id =#{id}]]>
+	</select>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="merchantBookDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectEntryList" parameterType="merchantBookDO" resultType="merchantBookDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件-->
+	<select id="selectEntryListCount" parameterType="merchantBookDO" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+
+
+</mapper>

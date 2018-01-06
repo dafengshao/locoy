@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="true" scanPeriod="30 seconds">
+<springProperty scope="context" name="logLevel" source="logging.level"/>
+    <springProperty scope="context" name="logPath" source="logging.path"/>
+    <springProperty scope="context" name="sqlLevel" source="logging.level.sql"/>
+    <springProperty scope="context" name="applicationLevel" source="logging.level.application"/>
+	<property name="ABSOLUTE_PATH"  value="${logPath}" />
+	
+	
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>
+				%date{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="launchAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>
+				${ABSOLUTE_PATH}/launch-%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<maxHistory>10</maxHistory>
+			<!-- <maxFileSize>50MB</maxFileSize>
+            <totalSizeCap>2GB</totalSizeCap> -->
+		</rollingPolicy>
+		<!--日志文件最大的大小 -->
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>20MB</MaxFileSize>
+        </triggeringPolicy>
+		<encoder>
+			<pattern>
+				%date{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
+			</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">    
+            <level>error</level>    
+            <onMatch>ACCEPT</onMatch>    
+            <onMismatch>DENY</onMismatch>    
+        </filter> 
+	</appender>
+	
+	<!-- <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"> 
+　　　　　　　　　　　　<file>${ABSOLUTE_PATH}/test.log</file> 
+
+　　　　　　　　　　　　<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy"> 
+　　　　　　　　　　　　　　<fileNamePattern>tests.%i.log.zip</fileNamePattern> 
+　　　　　　　　　　　　　　<minIndex>1</minIndex> 
+　　　　　　　　　　　　　　<maxIndex>10</maxIndex> 
+　　　　　　　　　　　　</rollingPolicy> 
+
+　　　　　　　　　　　　<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy"> 
+　　　　　　　　　　　　　　<maxFileSize>200kb</maxFileSize> 
+　　　　　　　　　　　　</triggeringPolicy> 
+　　　　　　　　　　　　<encoder> 
+　　　　　　　　　　　　　　<pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern> 
+　　　　　　　　　　　　</encoder> 
+　　　　　　　　　　</appender>  -->
+
+	<appender name="applicationAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>
+				${ABSOLUTE_PATH}/application-%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			
+			<maxHistory>10</maxHistory>
+			<!-- <maxFileSize>1kb</maxFileSize>
+            <totalSizeCap>2GB</totalSizeCap> -->
+		</rollingPolicy>
+		
+		<encoder>
+			<pattern>
+				%date{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
+			</pattern>
+		</encoder>
+		 
+	</appender>
+	
+	
+	<appender name="sqlAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>
+				${ABSOLUTE_PATH}/sql-%d{yyyy-MM-dd-HH}.log
+			</fileNamePattern>
+			<maxHistory>6</maxHistory>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>
+				%date{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	
+	
+	<logger name="com.startdt.member.dao.mapper" level="${sqlLevel}" additivity="false">
+        <appender-ref ref="sqlAppender" />
+   </logger>
+   <logger name="com.startdt.member" level="${applicationLevel}" additivity="false">
+        <appender-ref ref="applicationAppender" />
+        
+   </logger>
+   
+	
+
+	<root level="${logLevel}">
+		<appender-ref ref="console" />
+		<appender-ref ref="launchAppender" />
+	</root>
+
+</configuration>
