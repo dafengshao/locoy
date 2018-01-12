@@ -1,6 +1,5 @@
 package com.leisure.locoy.provider.app;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

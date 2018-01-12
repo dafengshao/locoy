@@ -5,6 +5,8 @@ import java.io.IOException;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
 
 public class JsoupUtil {
 
@@ -24,6 +26,7 @@ public class JsoupUtil {
 		connect.header("Upgrade-Insecure-Requests", "1");
 		connect.header("User-Agent",
 				"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36");
+		connect.ignoreContentType(true);
 		try {
 			return connect.get();
 		} catch (IOException e) {
@@ -36,6 +39,8 @@ public class JsoupUtil {
 	
 	public static void main(String[] args) {
 		Document parse = parse("http://www.luoxia.com/");
+		Elements elementsByTag = parse.getElementsByTag("script");
+		elementsByTag.remove();
 		System.out.println(parse);
 	}
 }
