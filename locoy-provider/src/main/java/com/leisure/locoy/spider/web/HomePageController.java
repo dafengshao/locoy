@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.leisure.locoy.spider.JsoupUtil;
+import com.leisure.locoy.spider.logic.CommonLogic;
 
 @Controller
 public class HomePageController {
@@ -17,7 +18,7 @@ public class HomePageController {
 	@ResponseBody()
     public String index() {  
 		Document parse = JsoupUtil.parse("http://www.luoxia.com/");
-		return buildHTML(parse);
+		return CommonLogic.toViewHTML(parse);
         
     }
 
